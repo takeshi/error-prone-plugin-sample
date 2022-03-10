@@ -1,0 +1,81 @@
+plugins {
+    id 'java'
+    id("net.ltgt.errorprone") version "2.0.2"
+
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+
+repositories {
+    mavenCentral()
+}
+
+allprojects {
+    version = '1.0'
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    dependencies {
+        // for type inference
+//        annotationProcessor 'org.projectlombok:lombok:1.18.12'
+//        compileOnly 'org.projectlombok:lombok:1.18.12'
+//        testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
+//        testCompileOnly 'org.projectlombok:lombok:1.18.12'
+
+        // for logging
+//        implementation 'ch.qos.logback:logback-classic:1.2.3'
+//        implementation 'org.slf4j:slf4j-api:1.7.26'
+
+//        implementation 'com.google.guava:guava:29.0-jre'
+//        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+//        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
+
+
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+}
+
+project(":common") {
+    configurations {
+        testJavac {
+            transitive false
+        }
+    }
+    dependencies {
+        compileOnly ("com.google.errorprone:error_prone_check_api:2.11.0")
+        compileOnly ("com.google.auto.service:auto-service-annotations:1.0")
+        annotationProcessor 'com.google.auto.service:auto-service:1.0'
+        compileOnly group: 'com.google.errorprone', name: 'javac', version: '9-dev-r4023-1'
+
+//        errorprone("com.google.errorprone:error_prone_core:2.11.0")
+//        testImplementation 'com.google.errorprone:error_prone_test_helpers:2.3.4'
+//        testRuntimeOnly 'org.projectlombok:lombok:1.18.10'
+    }
+
+}
+project(":app") {
+    apply plugin: 'net.ltgt.errorprone'
+
+    dependencies {
+        errorprone project(":common")
+        errorprone("com.google.errorprone:error_prone_core:2.11.0")
+    }
+}
+
+//project(":base") {
+//    dependencies {
+//        implementation project(":common")
+//    }
+//}
